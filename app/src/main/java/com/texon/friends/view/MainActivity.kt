@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.texon.friends.R
 import com.texon.friends.gone
-import com.texon.friends.model.UserApiResponse
+import com.texon.friends.model.data.UserApiResponse
 import com.texon.friends.model.api.UserApiModel
 import com.texon.friends.model.data.UserData
 import com.texon.friends.model.api.UserInterface
@@ -24,6 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
@@ -35,19 +36,20 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
     private lateinit var adapter: UserAdapter
 
     companion object {
-        const val EXTRA_RESULT_ITEM = "extra_result_item"
+        const val resultItem = "resultItem"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Recycle view column making and item decoration
         recycleView.layoutManager = GridLayoutManager(this@MainActivity,2)
         recycleView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         progressBar.visible()
         recycleView.gone()
-        getUsers()
+        getUsers() // Api calling function declaration
 
         swfRefresh.setOnRefreshListener { getUsers() }
     }
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
     // Item onclick listener
     override fun onUserClickListener(results: UserData, sharedImageView: ImageView) {
         val intent = Intent(this, UserDetails::class.java)
-        intent.putExtra(EXTRA_RESULT_ITEM, results)
+        intent.putExtra(resultItem, results)
 
         val options: ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this,
@@ -111,6 +113,7 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
         }
         backPressedTime = System.currentTimeMillis()
     }
+
 
 }
 

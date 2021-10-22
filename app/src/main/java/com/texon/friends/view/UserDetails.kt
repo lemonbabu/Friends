@@ -9,6 +9,8 @@ import com.texon.friends.R
 import com.texon.friends.model.data.UserData
 import kotlinx.android.synthetic.main.activity_user_details.*
 import java.lang.Exception
+import com.texon.friends.getAddress
+
 
 class UserDetails : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -18,13 +20,19 @@ class UserDetails : AppCompatActivity() {
 
         supportStartPostponedEnterTransition()
 
-        val results: UserData =
-            intent.extras?.getSerializable(MainActivity.EXTRA_RESULT_ITEM) as UserData
+        // Getting Intent extra data from main activity
+        val results: UserData = intent.extras?.getSerializable(MainActivity.resultItem) as UserData
+        // Data set on text & image view
+        txtUserName.text = "${results.name.title} ${results.name.first} ${results.name.last}"
+        txtUserEmail.text = results.email
+        txtUserPhone.text = "${results.phone} / ${results.cell}"
 
-        username_detail.text = "${results.name.title} ${results.name.first} ${results.name.last}"
-        email_detail.text = results.email
-        address_detail.text = "${results.location.city} / ${results.location.state}"
+        // country getting from latitude and longitude
+        val myLat = results.location.coordinates.latitude.toDouble()
+        val myLong = results.location.coordinates.longitude.toDouble()
+        txtUserAddress.text = "${results.location.city} / ${results.location.state}, ${this.getAddress(myLat, myLong)}"
 
+        // image loading function
         Picasso.get()
             .load(results.picture.large)
             .into(circleImageView_detail, object : Callback {
@@ -36,6 +44,7 @@ class UserDetails : AppCompatActivity() {
                 }
             })
 
+        // Title bar customizations
         supportActionBar?.title = "${results.name.title} ${results.name.last}"
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,5 +55,6 @@ class UserDetails : AppCompatActivity() {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
+
 }
 

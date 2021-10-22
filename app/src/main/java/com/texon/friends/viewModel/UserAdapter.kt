@@ -1,6 +1,6 @@
 package com.texon.friends.viewModel
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +13,19 @@ import com.texon.friends.model.data.UserData
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
 import kotlin.collections.ArrayList
+import com.texon.friends.getAddress
+
 
 class UserAdapter(var userList: ArrayList<UserData>, var onUserClickListener: OnUserClickListener) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>(),
     Filterable {
 
     var userFilterList = ArrayList<UserData>(userList)
+    lateinit var con: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.user_card, parent, false)
+        con = parent.context
         return ViewHolder(view)
     }
 
@@ -29,7 +33,15 @@ class UserAdapter(var userList: ArrayList<UserData>, var onUserClickListener: On
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.userName.text = "${userList[position].name.title} ${userList[position].name.first} ${userList[position].name.last}"
-        holder.userEmail.text = userList[position].email
+
+        val myLat = userList[position].location.coordinates.latitude.toDouble()
+        val myLong = userList[position].location.coordinates.longitude.toDouble()
+        val country = con.getAddress(myLat, myLong)
+        if(country == null || country == "")
+            holder.userCountry.text = "Not available"
+        else
+            holder.userCountry.text = country
+
         Picasso.get()
             .load(userList[position].picture.large)
             .placeholder(R.mipmap.ic_launcher)
@@ -45,7 +57,7 @@ class UserAdapter(var userList: ArrayList<UserData>, var onUserClickListener: On
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userName: TextView = itemView.findViewById(R.id.txtName)
-        val userEmail: TextView = itemView.findViewById(R.id.txtCountry)
+        val userCountry: TextView = itemView.findViewById(R.id.txtCountry)
         val userImage: ImageView = itemView.findViewById<CircleImageView>(R.id.imgUser)
     }
 

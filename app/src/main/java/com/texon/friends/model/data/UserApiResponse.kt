@@ -1,7 +1,6 @@
-package com.texon.friends.model
+package com.texon.friends.model.data
 
 import com.google.gson.annotations.SerializedName
-import com.texon.friends.model.data.UserData
 
 class UserApiResponse (
     @SerializedName("results")
