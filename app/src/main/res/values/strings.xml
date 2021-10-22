@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Friends</string>
+    <string name="user_name">Mr. Laifur Rahman</string>
+    <string name="country_name">Bangladesh</string>
+    <string name="user_portrait">user_portrait</string>
+    <string name="sample_email">atifur.duet@gmail.com</string>
+    <string name="sample_address">West Vhuruliya, Jaydebour, Gazipur</string>
 </resources>
